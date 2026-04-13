@@ -1,0 +1,32 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Backups and Helper Scripts
+backup_registrations_previo.json
+REPORTE_REGISTROS_EVENTO_PREVIO.csv
+backup_script.cjs
+json_to_csv.cjs
+clear_db_script.cjs
+.env
+

@@ -1,0 +1,5 @@
+{
+  "name": "PARADIGMA Pre-Registration",
+  "description": "A pre-registration web application for the PARADIGMA music event, with a nostalgic Windows 95 theme. It captures attendee data, sends email confirmations with a unique QR code using EmailJS, and stores records in Firebase.",
+  "requestFramePermissions": []
+}
