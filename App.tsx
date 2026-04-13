@@ -88,9 +88,6 @@ const RegistrationForm: React.FC<{
       <div className="text-center mb-6 md:mb-8">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-wide mb-2">LIVE SETS</h1>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-2">ABRIL 17</h2>
-        <p className="text-xs sm:text-sm font-bold uppercase tracking-tighter text-gray-800 mb-4 md:mb-8">
-          Vicente guerrero #130, San Juan de Dios
-        </p>
         
         <p className="text-xs sm:text-sm md:text-base text-gray-700 max-w-md mx-auto leading-relaxed px-2">
           Ingresa tu primer nombre, primer apellido y email para poder enviarte el codigo QR necesario y hacer valida tu promoción el dia del evento.
@@ -220,9 +217,6 @@ const SuccessScreen: React.FC = () => (
     <div className="text-center mb-6 md:mb-8">
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-wide mb-2">LIVE SETS</h1>
       <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-2">ABRIL 17</h2>
-      <p className="text-xs sm:text-sm font-bold uppercase tracking-tighter text-gray-800 mb-4 md:mb-8 text-center">
-        Vicente guerrero #130, San Juan de Dios
-      </p>
     </div>
 
     {/* Success Box */}
@@ -232,7 +226,7 @@ const SuccessScreen: React.FC = () => (
         
         <div className="text-left space-y-3 md:space-y-4 border-t border-b border-gray-200 py-4 md:py-6">
           <p className="text-sm md:text-base text-gray-700 leading-relaxed px-2">
-            Debiste recibir un correo con el código QR que deberás presentar ese día en la puerta.
+            Debiste recibir un correo con la dirección del evento, además del código QR que deberás presentar ese día en la puerta.
           </p>
         </div>
         
