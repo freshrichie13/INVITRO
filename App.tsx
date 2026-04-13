@@ -174,9 +174,9 @@ const RegistrationForm: React.FC<{
           href="https://fresh-richie.vercel.app/"
           target="_blank"
           rel="noopener noreferrer"
-          className="font-black text-xs tracking-widest uppercase border-2 border-black p-1 inline-block hover:bg-black hover:text-white hover:scale-110 transition-all duration-300 text-center cursor-pointer"
+          className="font-normal text-xs tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity duration-300 text-center cursor-pointer"
         >
-          Powered by<br/>FRESH RICHIE
+          Powered by FRESH RICHIE
         </a>
       </div>
     </div>
@@ -255,9 +255,9 @@ const SuccessScreen: React.FC = () => (
         href="https://fresh-richie.vercel.app/"
         target="_blank"
         rel="noopener noreferrer"
-        className="font-black text-xs tracking-widest uppercase border-2 border-black p-1 inline-block hover:bg-black hover:text-white hover:scale-110 transition-all duration-300 text-center cursor-pointer"
+        className="font-normal text-xs tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity duration-300 text-center cursor-pointer"
       >
-        Powered by<br/>FRESH RICHIE
+        Powered by FRESH RICHIE
       </a>
     </div>
   </div>
