@@ -9,7 +9,10 @@ interface WindowProps {
 
 const Window: React.FC<WindowProps> = ({ children, className }) => {
   return (
-    <div className={`bg-white border-2 border-black p-6 md:p-8 w-full ${className}`}>
+    <div
+      className={`border-2 border-[#C1714F] p-6 md:p-8 w-full ${className}`}
+      style={{ backgroundColor: 'rgba(59, 31, 14, 0.85)' }}
+    >
       {children}
     </div>
   );

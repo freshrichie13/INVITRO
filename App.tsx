@@ -86,20 +86,23 @@ const RegistrationForm: React.FC<{
     <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-screen pt-6 sm:pt-8 md:pt-10 pb-20 md:pb-24 px-4">
       {/* Header Section */}
       <div className="text-center mb-6 md:mb-8">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-wide mb-2">LIVE SETS</h1>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-2">ABRIL 17</h2>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-wide mb-2 text-[#3B1F0E]">Estás Mirando en Radianes</h1>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-2 text-black">MAYO 14</h2>
+        <p className="text-base sm:text-lg md:text-xl font-light mb-2 text-[#F5ECD7] max-w-md mx-auto leading-relaxed px-2">
+          Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees.
+        </p>
         
-        <p className="text-xs sm:text-sm md:text-base text-gray-700 max-w-md mx-auto leading-relaxed px-2">
-          Ingresa tu primer nombre, primer apellido y email para poder enviarte el codigo QR necesario y hacer valida tu promoción el dia del evento.
+        <p className="text-xs sm:text-sm md:text-base text-[#F5ECD7] opacity-80 max-w-md mx-auto leading-relaxed px-2">
+          Ingresa tu primer nombre, primer apellido y email para poder enviarte el código QR necesario y hacer válida tu entrada el día del evento.
         </p>
       </div>
 
       {/* Form Box */}
       <Window className="mb-8 md:mb-12">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4 md:space-y-6">
-          <h3 className="text-2xl sm:text-3xl font-light text-center mb-2">Pre-registro</h3>
+          <h3 className="text-2xl sm:text-3xl font-light text-center mb-2 text-[#F5ECD7]">Pre-registro</h3>
           
-          {error && <div className="bg-red-50 border border-red-500 text-red-700 px-4 py-2 text-sm text-center">{error}</div>}
+          {error && <div className="bg-[#3B1F0E] border border-[#D9534F] text-[#F5ECD7] px-4 py-2 text-sm text-center">{error}</div>}
 
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
@@ -112,7 +115,7 @@ const RegistrationForm: React.FC<{
                 placeholder="Primer nombre..."
                 maxLength={50}
               />
-              {formErrors.firstName && <p className="text-red-500 text-xs mt-1 ml-1">{formErrors.firstName}</p>}
+              {formErrors.firstName && <p className="text-[#D9534F] text-xs mt-1 ml-1">{formErrors.firstName}</p>}
             </div>
             <div className="flex-1">
               <Input 
@@ -124,7 +127,7 @@ const RegistrationForm: React.FC<{
                 placeholder="Primer apellido..."
                 maxLength={50}
               />
-              {formErrors.lastName && <p className="text-red-500 text-xs mt-1 ml-1">{formErrors.lastName}</p>}
+              {formErrors.lastName && <p className="text-[#D9534F] text-xs mt-1 ml-1">{formErrors.lastName}</p>}
             </div>
           </div>
 
@@ -138,7 +141,7 @@ const RegistrationForm: React.FC<{
               placeholder="Email..."
               maxLength={100}
             />
-            {formErrors.email && <p className="text-red-500 text-xs mt-1 ml-1">{formErrors.email}</p>}
+            {formErrors.email && <p className="text-[#D9534F] text-xs mt-1 ml-1">{formErrors.email}</p>}
           </div>
 
           <p className="text-[10px] text-center text-gray-500 uppercase tracking-wide">
@@ -149,7 +152,7 @@ const RegistrationForm: React.FC<{
             <button 
               type="button"
               onClick={handleReset}
-              className="px-6 py-2 bg-transparent border-2 border-gray-300 text-gray-400 font-bold uppercase tracking-widest hover:border-black hover:text-black transition-colors w-full md:w-auto min-w-[120px]"
+              className="px-6 py-2 bg-transparent border-2 border-[#6B3A2A] text-[#F5ECD7] opacity-60 font-bold uppercase tracking-widest hover:border-[#C1714F] hover:opacity-100 transition-colors w-full md:w-auto min-w-[120px]"
             >
               Limpiar
             </button>
@@ -160,21 +163,16 @@ const RegistrationForm: React.FC<{
 
       {/* Footer Info */}
       <div className="text-center space-y-2 mb-8 md:mb-16">
-        <p className="text-sm text-gray-600 px-2 uppercase tracking-widest font-bold">
-          By ANCI, GIJO, TURX, FRESH RICHIE, DAEVIAN & CEREZADEMAR
+        <p className="text-sm text-gray-400 px-2 tracking-wide font-light text-center">
+          Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees.
         </p>
       </div>
 
       {/* Bottom Brand */}
       <div className="mt-auto">
-        <a 
-          href="https://fresh-richie.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-normal text-xs tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity duration-300 text-center cursor-pointer"
-        >
-          Powered by FRESH RICHIE
-        </a>
+        <p className="font-normal text-xs tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
+          INVITRO
+        </p>
       </div>
     </div>
   );
@@ -189,15 +187,15 @@ const ConfirmationScreen: React.FC<{
   <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-screen pt-4 pb-20 px-4">
     <Window>
       <div className="flex flex-col space-y-4 md:space-y-6 text-center">
-        <h3 className="text-xl sm:text-2xl font-light">Confirmar Datos</h3>
-        <div className="text-left space-y-3 md:space-y-4 border-t border-b border-gray-200 py-3 md:py-4">
+        <h3 className="text-xl sm:text-2xl font-light text-[#F5ECD7]">Confirmar Datos</h3>
+        <div className="text-left space-y-3 md:space-y-4 border-t border-b border-[#6B3A2A] py-3 md:py-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-            <span className="font-bold text-gray-500 text-xs sm:text-sm uppercase">Nombre:</span>
-            <span className="sm:col-span-2 font-medium text-sm sm:text-base break-words">{userData.firstName} {userData.lastName}</span>
+            <span className="font-bold text-[#F5ECD7] opacity-60 text-xs sm:text-sm uppercase">Nombre:</span>
+            <span className="sm:col-span-2 font-medium text-sm sm:text-base break-words text-[#F5ECD7]">{userData.firstName} {userData.lastName}</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-            <span className="font-bold text-gray-500 text-xs sm:text-sm uppercase">Email:</span>
-            <span className="sm:col-span-2 font-medium text-sm sm:text-base break-all">{userData.email}</span>
+            <span className="font-bold text-[#F5ECD7] opacity-60 text-xs sm:text-sm uppercase">Email:</span>
+            <span className="sm:col-span-2 font-medium text-sm sm:text-base break-all text-[#F5ECD7]">{userData.email}</span>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row justify-center gap-3 sm:space-x-4 pt-2">
@@ -215,22 +213,21 @@ const SuccessScreen: React.FC = () => (
   <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-screen pt-6 md:pt-10 pb-20 px-4">
     {/* Header Section */}
     <div className="text-center mb-6 md:mb-8">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-wide mb-2">LIVE SETS</h1>
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-2">ABRIL 17</h2>
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-wide mb-2 text-[#3B1F0E]">Estás Mirando en Radianes</h1>
     </div>
 
     {/* Success Box */}
     <Window className="mb-8 md:mb-12">
       <div className="flex flex-col space-y-4 md:space-y-6 text-center">
-        <h3 className="text-2xl sm:text-3xl font-light mb-3 md:mb-4">¡Pre-registro Exitoso!</h3>
+        <h3 className="text-2xl sm:text-3xl font-light mb-3 md:mb-4 text-[#F5ECD7]">¡Pre-registro Exitoso!</h3>
         
-        <div className="text-left space-y-3 md:space-y-4 border-t border-b border-gray-200 py-4 md:py-6">
-          <p className="text-sm md:text-base text-gray-700 leading-relaxed px-2">
+        <div className="text-left space-y-3 md:space-y-4 border-t border-b border-[#6B3A2A] py-4 md:py-6">
+          <p className="text-sm md:text-base text-[#F5ECD7] opacity-80 leading-relaxed px-2">
             Debiste recibir un correo con la dirección del evento, además del código QR que deberás presentar ese día en la puerta.
           </p>
         </div>
         
-        <p className="text-base md:text-lg lg:text-xl font-light text-gray-800">
+        <p className="text-base md:text-lg lg:text-xl font-light text-[#F5ECD7]">
           Te esperamos 8:00 PM
         </p>
       </div>
@@ -238,21 +235,16 @@ const SuccessScreen: React.FC = () => (
 
     {/* Footer Info */}
     <div className="text-center space-y-2 mb-8 md:mb-16">
-      <p className="text-sm text-gray-600 px-2 uppercase tracking-widest font-bold">
-        By ANCI, GIJO, TURX, FRESH RICHIE, DAEVIAN & CEREZADEMAR
+      <p className="text-sm text-gray-400 px-2 tracking-wide font-light text-center">
+        Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees.
       </p>
     </div>
 
     {/* Bottom Brand */}
     <div className="mt-auto">
-      <a 
-        href="https://fresh-richie.vercel.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="font-normal text-xs tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity duration-300 text-center cursor-pointer"
-      >
-        Powered by FRESH RICHIE
-      </a>
+      <p className="font-normal text-xs tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
+        INVITRO
+      </p>
     </div>
   </div>
 );
@@ -303,7 +295,7 @@ Nombre: ${userData.firstName} ${userData.lastName}
 Email: ${userData.email}
 Fecha: ${formattedDate}
 Hora: ${formattedTime}
-Evento: LIVE SETS - ABRIL 17
+Evento: ESTÁS MIRANDO EN RADIANES - MAYO 14
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
       
@@ -329,9 +321,9 @@ Evento: LIVE SETS - ABRIL 17
         to_name: fullName,
         to_email: userData.email,
         qr_code_image_url: qrCodeDataUrl,
-        event_name: "LIVE SETS",
-        event_date: "17 de Abril",
-        event_location: "Vicente guerrero #130, San Juan de Dios",
+        event_name: "ESTÁS MIRANDO EN RADIANES",
+        event_date: "14 de Mayo",
+        event_location: "Por confirmar",
         event_time: "8:00 PM"
       });
 
@@ -366,7 +358,17 @@ Evento: LIVE SETS - ABRIL 17
   };
 
   return (
-    <div className="min-h-screen bg-white text-black font-sans">
+    <div
+      className="min-h-screen font-sans"
+      style={{
+        backgroundImage: "url('/images/nuevo fondo pagina registro3500pxls.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundColor: '#3B1F0E',
+        color: '#F5ECD7',
+      }}
+    >
       {renderContent()}
       {/* <MatrixBanner /> */}
     </div>
