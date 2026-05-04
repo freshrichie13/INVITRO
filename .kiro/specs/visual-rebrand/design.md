@@ -551,3 +551,351 @@ Los siguientes acceptance criteria se verifican mediante revisión de código y 
 - **@testing-library/react** — render de componentes
 - **Vitest** — test runner (ya en el stack con Vite)
 - **wcag-contrast** o implementación manual de la fórmula WCAG 2.1 para `getContrastRatio`
+
+
+---
+
+## Iteration 2 — Typography & Layout Refinements
+
+> **Alcance:** Esta sección documenta los cambios técnicos correspondientes a los Requirements 7–12. No reemplaza el diseño de la Iteration 1 — extiende y refina los componentes ya modificados.
+
+---
+
+### Overview de cambios
+
+| Req | Componente | Cambio |
+|---|---|---|
+| 7 | `App.tsx` — `RegistrationForm`, `SuccessScreen` | `h1`: `font-normal` → `font-bold` + clase `uppercase` |
+| 8 | `App.tsx` — `RegistrationForm` | `h2` "MAYO 14": `font-semibold` → `font-normal` |
+| 9 | `App.tsx` — `RegistrationForm` | Eliminar `<p>` descriptivo del header |
+| 10 | `App.tsx` — `RegistrationForm` | Párrafo instrucciones: `text-[#F5ECD7] opacity-80` → `text-[#6B3A2A]` |
+| 11 | `components/Window.tsx` | `backgroundColor`: `rgba(59,31,14,0.85)` → `rgba(59,31,14,0.65)` |
+| 12 | `App.tsx` — `RegistrationForm`, `SuccessScreen` | Footer: color `text-gray-400` → `text-[#6B3A2A]`, eliminar punto final, `INVITRO` con `fixed bottom-4` |
+
+---
+
+### Req 7 — h1 uppercase + bold
+
+**Archivos:** `App.tsx` — `RegistrationForm` y `SuccessScreen`
+
+El título principal gana jerarquía tipográfica con `font-bold` y `uppercase`. El color `#3B1F0E` (café oscuro) se mantiene.
+
+```tsx
+// ANTES
+<h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-wide mb-2 text-[#3B1F0E]">
+  Estás Mirando en Radianes
+</h1>
+
+// DESPUÉS
+<h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide mb-2 text-[#3B1F0E] uppercase">
+  ESTÁS MIRANDO EN RADIANES
+</h1>
+```
+
+> **Nota:** La clase `uppercase` de Tailwind aplica `text-transform: uppercase` via CSS. El texto en el JSX puede quedar en minúsculas/mixto — el navegador lo renderiza en mayúsculas. Sin embargo, para consistencia con el contenido del QR (`"ESTÁS MIRANDO EN RADIANES"`) se recomienda escribir el literal en mayúsculas también.
+
+**Aplica a:** `RegistrationForm` (header) y `SuccessScreen` (header).
+
+---
+
+### Req 8 — h2 "MAYO 14" sin negritas
+
+**Archivo:** `App.tsx` — `RegistrationForm`
+
+El subtítulo de fecha pierde peso para no competir con el h1.
+
+```tsx
+// ANTES
+<h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-2 text-black">MAYO 14</h2>
+
+// DESPUÉS
+<h2 className="text-3xl sm:text-4xl md:text-5xl font-normal mb-2 text-black">MAYO 14</h2>
+```
+
+> Solo cambia `font-semibold` → `font-normal`. Tamaño, color y espaciado permanecen intactos.
+
+---
+
+### Req 9 — Eliminación del párrafo descriptivo del header
+
+**Archivo:** `App.tsx` — `RegistrationForm`
+
+Se elimina completamente el `<p>` que aparecía entre el `h2` "MAYO 14" y el párrafo de instrucciones del formulario. Esto reduce redundancia visual ya que el mismo texto aparece en el footer inferior.
+
+```tsx
+// ELIMINAR — este elemento se borra por completo
+<p className="text-base sm:text-lg md:text-xl font-light mb-2 text-[#F5ECD7] max-w-md mx-auto leading-relaxed px-2">
+  Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees.
+</p>
+```
+
+**Resultado:** La sección header del `RegistrationForm` queda con únicamente `h1` y `h2`, sin párrafo intermedio.
+
+---
+
+### Req 10 — Color del texto de instrucciones del formulario
+
+**Archivo:** `App.tsx` — `RegistrationForm`
+
+El párrafo de instrucciones cambia de crema claro con opacidad reducida a café claro cálido sólido. El color `#6B3A2A` (marrón medio de la Warm_Palette) tiene suficiente contraste sobre el fondo del Window sin necesitar `opacity-80`.
+
+```tsx
+// ANTES
+<p className="text-xs sm:text-sm md:text-base text-[#F5ECD7] opacity-80 max-w-md mx-auto leading-relaxed px-2">
+  Ingresa tu primer nombre...
+</p>
+
+// DESPUÉS
+<p className="text-xs sm:text-sm md:text-base text-[#6B3A2A] max-w-md mx-auto leading-relaxed px-2">
+  Ingresa tu primer nombre...
+</p>
+```
+
+> Se elimina `opacity-80` porque `#6B3A2A` ya provee el nivel de énfasis visual deseado sin reducir la opacidad del elemento completo (lo que afectaría también a elementos hijos si los hubiera).
+
+---
+
+### Req 11 — Reducción de opacidad del Window (-20%)
+
+**Archivo:** `components/Window.tsx`
+
+La opacidad del fondo del contenedor Window se reduce de 0.85 a 0.65, permitiendo mayor visibilidad de la imagen de fondo.
+
+```tsx
+// ANTES
+style={{ backgroundColor: 'rgba(59, 31, 14, 0.85)' }}
+
+// DESPUÉS
+style={{ backgroundColor: 'rgba(59, 31, 14, 0.65)' }}
+```
+
+**Verificación de contraste con nueva opacidad:**
+
+El color efectivo del fondo del Window sobre el fondo sólido `#3B1F0E` (fallback) se puede calcular como:
+
+```
+rgba(59, 31, 14, 0.65) sobre #3B1F0E ≈ rgb(59, 31, 14)
+```
+
+Dado que el fondo de la imagen y el fallback son ambos tonos muy oscuros del mismo café, el color efectivo del Window sigue siendo oscuro. El texto crema `#F5ECD7` sobre este fondo mantiene un ratio estimado de ~8.5:1, cumpliendo WCAG AA.
+
+> **Nota:** El ratio exacto depende del contenido de la imagen de fondo en cada zona. En zonas más claras de la imagen, la opacidad 0.65 puede reducir el contraste. Se recomienda verificación visual en el navegador con la imagen real.
+
+---
+
+### Req 12 — Ajustes del footer inferior
+
+**Archivo:** `App.tsx` — `RegistrationForm` y `SuccessScreen`
+
+Tres cambios coordinados en el footer inferior (fuera del Window):
+
+#### 12a — Color del párrafo descriptivo
+
+```tsx
+// ANTES (RegistrationForm y SuccessScreen)
+<p className="text-sm text-gray-400 px-2 tracking-wide font-light text-center">
+  Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees.
+</p>
+
+// DESPUÉS
+<p className="text-sm text-[#6B3A2A] px-2 tracking-wide font-light text-center">
+  Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees
+</p>
+```
+
+> Se cambia `text-gray-400` → `text-[#6B3A2A]` (consistente con Req 10) y se elimina el punto final.
+
+#### 12b — Posicionamiento de "INVITRO"
+
+"INVITRO" se saca del flujo normal del documento y se ancla al borde inferior del viewport.
+
+```tsx
+// ANTES
+<div className="mt-auto">
+  <p className="font-normal text-xs tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
+    INVITRO
+  </p>
+</div>
+
+// DESPUÉS
+<div className="fixed bottom-4 left-0 right-0">
+  <p className="font-normal text-xs tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
+    INVITRO
+  </p>
+</div>
+```
+
+> **Rationale:** `fixed bottom-4` (`position: fixed; bottom: 1rem`) ancla el elemento al viewport independientemente del scroll. `left-0 right-0` garantiza que el texto centrado ocupe el ancho completo. Al usar `fixed`, el elemento sale del flujo normal — el contenedor padre ya no necesita `mt-auto` ni `pb-20`/`pb-24` para compensar espacio.
+
+> **Consideración mobile:** `position: fixed` funciona correctamente en iOS Safari moderno. En versiones antiguas de iOS con la barra de navegación dinámica, `bottom: 1rem` puede quedar parcialmente oculto. Si se requiere soporte para iOS con safe area, usar `bottom: env(safe-area-inset-bottom, 1rem)` via style prop.
+
+**Aplica a:** `RegistrationForm` y `SuccessScreen`.
+
+---
+
+### Correctness Properties — Iteration 2
+
+*Extensión de las propiedades de corrección para los Requirements 7–12.*
+
+#### Reflexión de propiedades
+
+Del prework de los Requirements 7–12, se identificaron los siguientes criterios como propiedades universales (PROPERTY):
+
+- **7.4** — Consistencia de estilos del h1 entre pantallas
+- **9.2** — Estructura del header (solo h1 + h2, sin párrafo intermedio)
+- **11.3** — Contraste WCAG con la nueva opacidad del Window
+- **12.2 + 12.6** — Consistencia del footer entre pantallas (color + posicionamiento de INVITRO)
+
+Los criterios 12.2 y 12.6 se consolidan en una sola propiedad ya que ambos verifican la misma invariante sobre el mismo conjunto de pantallas.
+
+La propiedad 11.3 es una extensión de la Property 1 original (contraste WCAG) con el nuevo valor de opacidad — se documenta como Property 5 para trazabilidad.
+
+---
+
+### Property 3: Consistencia de estilos del h1 entre pantallas
+
+*Para cualquier* pantalla de la app que muestre el título principal del evento (`RegistrationForm`, `SuccessScreen`), el elemento `h1` SHALL tener aplicadas las clases `font-bold`, `uppercase` y el color `text-[#3B1F0E]`.
+
+**Validates: Requirements 7.1, 7.2, 7.3, 7.4**
+
+---
+
+### Property 4: Estructura del header del RegistrationForm
+
+*Para cualquier* render del componente `RegistrationForm` (independientemente del estado del formulario o los datos ingresados), la sección de header SHALL contener exactamente un `h1` y un `h2`, sin ningún elemento `<p>` intermedio entre ellos.
+
+**Validates: Requirements 9.1, 9.2**
+
+---
+
+### Property 5: Contraste WCAG AA con opacidad reducida del Window
+
+*Para cualquier* color de texto de la Warm_Palette utilizado dentro del componente `Window` tras la reducción de opacidad a `rgba(59, 31, 14, 0.65)`, el ratio de contraste calculado según WCAG 2.1 SHALL ser mayor o igual a 4.5:1 sobre el color efectivo del fondo.
+
+**Validates: Requirements 11.1, 11.3, 6.1**
+
+> Esta propiedad extiende la Property 1 original con el nuevo valor de opacidad. La implementación puede reutilizar la función `getContrastRatio` ya definida en la Testing Strategy de la Iteration 1.
+
+---
+
+### Property 6: Consistencia del footer entre pantallas
+
+*Para cualquier* pantalla de la app que muestre el footer inferior (`RegistrationForm`, `SuccessScreen`), el párrafo descriptivo SHALL usar el color `text-[#6B3A2A]` y no terminar en punto, y el elemento "INVITRO" SHALL tener posicionamiento `fixed bottom-4`.
+
+**Validates: Requirements 12.1, 12.2, 12.3, 12.4, 12.5, 12.6**
+
+---
+
+### Testing Strategy — Iteration 2
+
+#### Smoke tests (verificación de código/visual)
+
+Los siguientes cambios se verifican mediante revisión de código y prueba visual en el navegador:
+
+| Req | Verificación |
+|---|---|
+| 7.1, 7.2, 7.3 | `h1` en `RegistrationForm` tiene clases `font-bold`, `uppercase`, `text-[#3B1F0E]` |
+| 8.1, 8.2 | `h2` "MAYO 14" tiene `font-normal`, tamaño y color sin cambios |
+| 9.1 | No existe `<p>` con texto "Un taller..." en la sección header del `RegistrationForm` |
+| 10.1, 10.2 | Párrafo instrucciones tiene `text-[#6B3A2A]`, sin `opacity-80`, resto de clases intactas |
+| 11.1, 11.2 | `Window` tiene `backgroundColor: rgba(59,31,14,0.65)` y `border-[#C1714F]` |
+| 12.1, 12.3 | Footer `RegistrationForm`: `text-[#6B3A2A]`, texto sin punto final |
+| 12.4 | Footer `SuccessScreen`: texto sin punto final |
+| 12.5 | "INVITRO" en `RegistrationForm` tiene clase `fixed bottom-4` |
+
+#### Property-based tests — Iteration 2
+
+```typescript
+// Feature: visual-rebrand, Property 3: h1 styles consistent across screens
+import fc from 'fast-check';
+import { render } from '@testing-library/react';
+
+const SCREENS_WITH_H1 = ['form', 'success'] as const;
+
+test('Property 3: h1 has font-bold, uppercase, and #3B1F0E color on all screens', () => {
+  fc.assert(
+    fc.property(fc.constantFrom(...SCREENS_WITH_H1), (screen) => {
+      const { container } = renderAppInState(screen);
+      const h1 = container.querySelector('h1');
+      expect(h1).toBeTruthy();
+      expect(h1!.className).toMatch(/font-bold/);
+      expect(h1!.className).toMatch(/uppercase/);
+      expect(h1!.className).toMatch(/text-\[#3B1F0E\]/);
+    }),
+    { numRuns: 100 }
+  );
+});
+
+// Feature: visual-rebrand, Property 4: RegistrationForm header contains only h1 and h2
+test('Property 4: RegistrationForm header has only h1 and h2, no intermediate paragraphs', () => {
+  fc.assert(
+    fc.property(
+      fc.record({
+        firstName: fc.string(),
+        lastName: fc.string(),
+        email: fc.string(),
+      }),
+      (formData) => {
+        const { container } = renderRegistrationFormWithData(formData);
+        const headerSection = container.querySelector('.text-center.mb-6, .text-center.mb-8');
+        if (headerSection) {
+          const paragraphs = headerSection.querySelectorAll('p');
+          // No <p> elements should exist between h1 and h2 in the header
+          expect(paragraphs.length).toBe(0);
+        }
+      }
+    ),
+    { numRuns: 100 }
+  );
+});
+
+// Feature: visual-rebrand, Property 5: WCAG contrast with reduced Window opacity
+test('Property 5: Text colors maintain WCAG AA contrast with rgba(59,31,14,0.65) background', () => {
+  const WINDOW_BG_NEW = 'rgba(59, 31, 14, 0.65)';
+  const TEXT_COLORS_IN_WINDOW = ['#F5ECD7', '#FFFFFF', '#6B3A2A'];
+
+  fc.assert(
+    fc.property(fc.constantFrom(...TEXT_COLORS_IN_WINDOW), (textColor) => {
+      const ratio = getContrastRatio(textColor, WINDOW_BG_NEW);
+      return ratio >= 4.5;
+    }),
+    { numRuns: 100 }
+  );
+});
+
+// Feature: visual-rebrand, Property 6: Footer consistency across screens
+const SCREENS_WITH_FOOTER = ['form', 'success'] as const;
+
+test('Property 6: Footer uses #6B3A2A color, no trailing period, INVITRO is fixed bottom', () => {
+  fc.assert(
+    fc.property(fc.constantFrom(...SCREENS_WITH_FOOTER), (screen) => {
+      const { container } = renderAppInState(screen);
+
+      // Footer paragraph color
+      const footerP = container.querySelector('p[class*="text-\\[#6B3A2A\\]"]');
+      expect(footerP).toBeTruthy();
+      expect(footerP!.textContent).not.toMatch(/\.$/);
+
+      // INVITRO positioning
+      const invitroEl = Array.from(container.querySelectorAll('p'))
+        .find(el => el.textContent?.trim() === 'INVITRO');
+      expect(invitroEl).toBeTruthy();
+      const invitroContainer = invitroEl!.parentElement;
+      expect(invitroContainer!.className).toMatch(/fixed/);
+      expect(invitroContainer!.className).toMatch(/bottom-4/);
+    }),
+    { numRuns: 100 }
+  );
+});
+```
+
+#### Actualización de la tabla de example-based tests
+
+| Criterio | Test |
+|---|---|
+| 7.1–7.4 | Render `RegistrationForm` y `SuccessScreen` → `h1` tiene `font-bold`, `uppercase`, `text-[#3B1F0E]` |
+| 8.1 | Render `RegistrationForm` → `h2` "MAYO 14" tiene `font-normal` |
+| 9.1 | Render `RegistrationForm` → no existe `<p>` con "Un taller..." en el header |
+| 10.1 | Render `RegistrationForm` → párrafo instrucciones tiene `text-[#6B3A2A]`, sin `opacity-80` |
+| 11.1 | Render `Window` → `style.backgroundColor === 'rgba(59, 31, 14, 0.65)'` |
+| 12.1–12.6 | Render `RegistrationForm` y `SuccessScreen` → footer con `text-[#6B3A2A]`, sin punto final, `INVITRO` con `fixed bottom-4` |

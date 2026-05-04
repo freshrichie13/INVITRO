@@ -8,9 +8,6 @@ import Button from './components/Button';
 import Input from './components/Input';
 import MatrixBanner from './components/MatrixBanner';
 
-// This is a global declaration for the QRCode library loaded from CDN
-declare var QRCode: any;
-
 const RegistrationForm: React.FC<{
   userData: UserData;
   setUserData: React.Dispatch<React.SetStateAction<UserData>>;
@@ -86,13 +83,10 @@ const RegistrationForm: React.FC<{
     <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-screen pt-6 sm:pt-8 md:pt-10 pb-20 md:pb-24 px-4">
       {/* Header Section */}
       <div className="text-center mb-6 md:mb-8">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-wide mb-2 text-[#3B1F0E]">Estás Mirando en Radianes</h1>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-2 text-black">MAYO 14</h2>
-        <p className="text-base sm:text-lg md:text-xl font-light mb-2 text-[#F5ECD7] max-w-md mx-auto leading-relaxed px-2">
-          Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees.
-        </p>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide mb-2 text-[#3B1F0E] uppercase">ESTÁS MIRANDO EN RADIANES</h1>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal mb-2 text-black">MAYO 14</h2>
         
-        <p className="text-xs sm:text-sm md:text-base text-[#F5ECD7] opacity-80 max-w-md mx-auto leading-relaxed px-2">
+        <p className="text-xs sm:text-sm md:text-base text-[#6B3A2A] max-w-md mx-auto leading-relaxed px-2">
           Ingresa tu primer nombre, primer apellido y email para poder enviarte el código QR necesario y hacer válida tu entrada el día del evento.
         </p>
       </div>
@@ -163,13 +157,13 @@ const RegistrationForm: React.FC<{
 
       {/* Footer Info */}
       <div className="text-center space-y-2 mb-8 md:mb-16">
-        <p className="text-sm text-gray-400 px-2 tracking-wide font-light text-center">
-          Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees.
+        <p className="text-sm text-[#6B3A2A] px-2 tracking-wide font-light text-center">
+          Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees
         </p>
       </div>
 
       {/* Bottom Brand */}
-      <div className="mt-auto">
+      <div className="fixed bottom-4 left-0 right-0">
         <p className="font-normal text-xs tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
           INVITRO
         </p>
@@ -213,7 +207,7 @@ const SuccessScreen: React.FC = () => (
   <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-screen pt-6 md:pt-10 pb-20 px-4">
     {/* Header Section */}
     <div className="text-center mb-6 md:mb-8">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-wide mb-2 text-[#3B1F0E]">Estás Mirando en Radianes</h1>
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide mb-2 text-[#3B1F0E] uppercase">ESTÁS MIRANDO EN RADIANES</h1>
     </div>
 
     {/* Success Box */}
@@ -235,13 +229,13 @@ const SuccessScreen: React.FC = () => (
 
     {/* Footer Info */}
     <div className="text-center space-y-2 mb-8 md:mb-16">
-      <p className="text-sm text-gray-400 px-2 tracking-wide font-light text-center">
-        Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees.
+      <p className="text-sm text-[#6B3A2A] px-2 tracking-wide font-light text-center">
+        Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees
       </p>
     </div>
 
     {/* Bottom Brand */}
-    <div className="mt-auto">
+    <div className="fixed bottom-4 left-0 right-0">
       <p className="font-normal text-xs tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
         INVITRO
       </p>
@@ -259,8 +253,7 @@ const App: React.FC = () => {
     setIsSubmitting(true);
     setError(null);
     try {
-      // Initialize firebase if not already
-      firebaseApp; 
+      firebaseApp;
 
       const emailExists = await checkIfEmailExists(userData.email);
       if (emailExists) {
@@ -273,7 +266,6 @@ const App: React.FC = () => {
       const fullName = `${userData.firstName} ${userData.lastName}`;
       const registrationDate = new Date();
       
-      // Format date and time in readable format (Spanish locale)
       const formattedDate = registrationDate.toLocaleDateString('es-ES', {
         year: 'numeric',
         month: 'long',
@@ -284,34 +276,22 @@ const App: React.FC = () => {
         minute: '2-digit',
         hour12: false
       });
-      
-      // QR Code content formatted in an executive/professional way
-      // This will be readable when scanned and can be used to mark as processed in Firebase
-      const qrContent = `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  PRE-REGISTRO VÁLIDO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Nombre: ${userData.firstName} ${userData.lastName}
-Email: ${userData.email}
-Fecha: ${formattedDate}
-Hora: ${formattedTime}
-Evento: ESTÁS MIRANDO EN RADIANES - MAYO 14
+      // QR content — readable when scanned at the event door
+      const qrContent = encodeURIComponent(
+        `PRE-REGISTRO VALIDO | Nombre: ${userData.firstName} ${userData.lastName} | Email: ${userData.email} | Fecha: ${formattedDate} ${formattedTime} | Evento: ESTAS MIRANDO EN RADIANES - MAYO 14`
+      );
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
-      
-      // Check if QRCode is available
-      if (typeof QRCode === 'undefined') {
-        throw new Error('QRCode library not loaded');
-      }
-      
-      const qrCodeDataUrl = await QRCode.toDataURL(qrContent, { width: 300, margin: 2 });
+      // Generate QR URL via free public API — no base64, no Firebase Storage needed
+      // Compatible with all email clients (Gmail, Outlook, Apple Mail)
+      const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${qrContent}&margin=10`;
 
       const registrationData = {
         firstName: userData.firstName,
         lastName: userData.lastName,
-        name: fullName, // Keeping 'name' for backward compatibility if needed
+        name: fullName,
         email: userData.email,
-        qrCodeDataUrl: qrCodeDataUrl,
+        qrCodeUrl: qrCodeUrl,
         registeredAt: new Date().toISOString()
       };
 
@@ -320,7 +300,7 @@ Evento: ESTÁS MIRANDO EN RADIANES - MAYO 14
       await sendConfirmationEmail({
         to_name: fullName,
         to_email: userData.email,
-        qr_code_image_url: qrCodeDataUrl,
+        qr_code_image_url: qrCodeUrl,
         event_name: "ESTÁS MIRANDO EN RADIANES",
         event_date: "14 de Mayo",
         event_location: "Por confirmar",
@@ -329,11 +309,14 @@ Evento: ESTÁS MIRANDO EN RADIANES - MAYO 14
 
       setAppState('success');
     } catch (err: any) {
-      // Only log errors in development
-      if (process.env.NODE_ENV === 'development') {
-        console.error("Registration failed:", err);
+      console.error("Registration failed:", err);
+      let errorMessage = 'Ocurrió un error. Inténtalo de nuevo.';
+      if (err.message?.includes('email') || err.message?.includes('confirmation')) {
+        errorMessage = 'No se pudo enviar el email de confirmación. Inténtalo de nuevo.';
+      } else if (err.message?.includes('save') || err.message?.includes('registration')) {
+        errorMessage = 'No se pudo guardar el registro. Inténtalo de nuevo.';
       }
-      setError(`Ocurrió un error. Inténtalo de nuevo.`);
+      setError(errorMessage);
       setAppState('form');
     } finally {
       setIsSubmitting(false);

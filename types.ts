@@ -6,7 +6,7 @@ export interface UserData {
 }
 
 export interface RegistrationData extends UserData {
-    qrCodeDataUrl: string;
+    qrCodeUrl: string;      // URL https:// del QR (api.qrserver.com)
     registeredAt: string;
 }
 

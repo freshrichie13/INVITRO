@@ -121,3 +121,81 @@ Aplicar el rebrand visual de la app de pre-registro del evento "Estás Mirando e
 - No se modifica ningún archivo en `services/`, `types.ts` ni `config.ts`.
 - Los `style` props inline se usan donde Tailwind CDN no soporta valores arbitrarios con `rgba` o hover states custom.
 - La imagen de fondo se aplica una sola vez en el root div de `App.tsx` para garantizar que no haya parpadeo al navegar entre pantallas (Requirement 5.4).
+
+---
+
+## Iteration 2 — Typography & Layout Refinements
+
+> Tareas para los Requirements 7–12. Las tareas 1–11 (Iteration 1) ya están completadas. Las nuevas tareas se numeran a partir del 12.
+
+- [x] 12. Actualizar `App.tsx` — `RegistrationForm`: h1 uppercase + bold
+  - [x] 12.1 En `RegistrationForm`, cambiar el `h1` de `font-normal` a `font-bold` y agregar la clase `uppercase`
+    - El texto literal puede quedar en mayúsculas en el JSX para consistencia con el contenido del QR
+    - Mantener el color `text-[#3B1F0E]` y el resto de clases sin modificación
+    - _Requirements: 7.1, 7.2, 7.3_
+  - [x] 12.2 En `SuccessScreen`, aplicar los mismos estilos (`font-bold`, `uppercase`, `text-[#3B1F0E]`) al `h1`
+    - Verificar que ambas pantallas muestran el h1 con idénticas clases tipográficas
+    - _Requirements: 7.4_
+
+- [x] 13. Actualizar `App.tsx` — `RegistrationForm`: h2 "MAYO 14" sin negritas
+  - [x] 13.1 En `RegistrationForm`, cambiar el `h2` "MAYO 14" de `font-semibold` a `font-normal`
+    - Mantener tamaño (`text-3xl sm:text-4xl md:text-5xl`), color (`text-black`) y espaciado sin modificación
+    - _Requirements: 8.1, 8.2_
+
+- [x] 14. Actualizar `App.tsx` — `RegistrationForm`: eliminar párrafo descriptivo del header
+  - [x] 14.1 Eliminar el elemento `<p>` con el texto "Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees." ubicado en la sección de header, inmediatamente debajo del `h2` "MAYO 14"
+    - Tras la eliminación, la sección header debe contener únicamente el `h1` y el `h2`
+    - No eliminar el párrafo equivalente que aparece en el footer inferior (fuera del Window) — ese es un elemento distinto
+    - _Requirements: 9.1, 9.2_
+
+- [x] 15. Actualizar `App.tsx` — `RegistrationForm`: color del párrafo de instrucciones
+  - [x] 15.1 En el párrafo "Ingresa tu primer nombre, primer apellido y email...", cambiar `text-[#F5ECD7] opacity-80` por `text-[#6B3A2A]`
+    - Eliminar la clase `opacity-80` del elemento (el color `#6B3A2A` ya provee el nivel de énfasis visual deseado)
+    - Mantener el resto de clases (`text-xs sm:text-sm md:text-base`, `max-w-md mx-auto leading-relaxed px-2`) sin modificación
+    - _Requirements: 10.1, 10.2_
+
+- [x] 16. Checkpoint — Verificar cambios tipográficos en App.tsx
+  - Asegurar que `RegistrationForm` y `SuccessScreen` compilan sin errores de TypeScript.
+  - Verificar visualmente que el h1 aparece en mayúsculas y negritas, el h2 "MAYO 14" sin negritas, el párrafo descriptivo del header ha desaparecido, y el texto de instrucciones usa el color café claro.
+  - Preguntar al usuario si hay dudas antes de continuar con Window.tsx.
+
+- [x] 17. Actualizar `components/Window.tsx` — reducir opacidad del fondo
+  - [x] 17.1 Cambiar el `style` prop del div raíz de `backgroundColor: 'rgba(59, 31, 14, 0.85)'` a `backgroundColor: 'rgba(59, 31, 14, 0.65)'`
+    - Mantener el borde `border-[#C1714F]` y el resto de clases sin modificación
+    - Verificar visualmente que la imagen de fondo es más visible a través del Window con la nueva opacidad
+    - _Requirements: 11.1, 11.2_
+  - [ ]* 17.2 Verificar contraste WCAG AA con la nueva opacidad del Window
+    - **Property 5: Contraste WCAG AA con opacidad reducida del Window**
+    - Confirmar que el texto crema `#F5ECD7` sobre `rgba(59,31,14,0.65)` mantiene ratio ≥ 4.5:1
+    - Reutilizar la función `getContrastRatio` definida en la Iteration 1 si existe
+    - **Validates: Requirements 11.3, 6.1**
+
+- [x] 18. Actualizar `App.tsx` — footer inferior: color del párrafo descriptivo
+  - [x] 18.1 En `RegistrationForm`, cambiar el color del párrafo "Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees" (footer inferior, fuera del Window) de `text-gray-400` a `text-[#6B3A2A]`
+    - Eliminar el punto final (`.`) del texto del párrafo
+    - _Requirements: 12.1, 12.3_
+  - [x] 18.2 En `SuccessScreen`, aplicar el mismo cambio de color (`text-gray-400` → `text-[#6B3A2A]`) al párrafo equivalente en su footer inferior
+    - Eliminar el punto final (`.`) del texto del párrafo
+    - _Requirements: 12.2, 12.4_
+
+- [x] 19. Actualizar `App.tsx` — footer inferior: posicionamiento fijo de "INVITRO"
+  - [x] 19.1 En `RegistrationForm`, reemplazar el contenedor `<div className="mt-auto">` del texto "INVITRO" por `<div className="fixed bottom-4 left-0 right-0">`
+    - El elemento sale del flujo normal del documento con `position: fixed`
+    - `left-0 right-0` garantiza que el texto centrado ocupe el ancho completo del viewport
+    - Mantener las clases del `<p>` interno (`font-normal text-xs tracking-widest uppercase opacity-90 text-center text-[#C1714F]`) sin modificación
+    - _Requirements: 12.5_
+  - [x] 19.2 En `SuccessScreen`, aplicar el mismo cambio de contenedor (`mt-auto` → `fixed bottom-4 left-0 right-0`) al texto "INVITRO"
+    - Verificar que el posicionamiento es consistente entre `RegistrationForm` y `SuccessScreen`
+    - _Requirements: 12.6_
+
+- [x] 20. Checkpoint final Iteration 2 — Verificar consistencia visual completa
+  - Asegurar que `App.tsx` y `components/Window.tsx` compilan sin errores de TypeScript.
+  - Verificar visualmente en el navegador que:
+    - El h1 aparece en mayúsculas y negritas en `RegistrationForm` y `SuccessScreen`.
+    - El h2 "MAYO 14" aparece sin negritas.
+    - No hay párrafo descriptivo entre el h2 y el Window en `RegistrationForm`.
+    - El texto de instrucciones usa el color café claro `#6B3A2A`.
+    - La imagen de fondo es más visible a través del Window (opacidad 0.65).
+    - El footer inferior usa `text-[#6B3A2A]` y no tiene punto final.
+    - "INVITRO" aparece fijo en el borde inferior del viewport en ambas pantallas.
+  - Preguntar al usuario si hay dudas antes de cerrar.

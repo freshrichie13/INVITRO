@@ -109,3 +109,76 @@ Estos cambios son puramente visuales y no alteran la lógica de negocio, el fluj
 3. THE Input SHALL mantener el texto ingresado por el usuario legible (contraste mínimo 4.5:1) sobre el fondo del campo.
 4. IF el dispositivo del usuario tiene `prefers-reduced-motion` activo, THEN THE App SHALL no aplicar animaciones de transición en cambios de color o fondo.
 
+
+---
+
+### Requirement 7: Título principal en mayúsculas, negritas y color café oscuro
+
+**User Story:** Como organizador del evento, quiero que el título "Estás Mirando en Radianes" se muestre en mayúsculas y negritas con el color café oscuro ya definido, para que tenga mayor impacto visual y jerarquía tipográfica.
+
+#### Acceptance Criteria
+
+1. THE RegistrationForm SHALL mostrar el `h1` "Estás Mirando en Radianes" con la clase `uppercase` de Tailwind para transformar el texto a mayúsculas.
+2. THE RegistrationForm SHALL aplicar `font-bold` al `h1` en lugar de `font-normal`.
+3. THE RegistrationForm SHALL mantener el color `#3B1F0E` ya asignado al `h1`.
+4. THE SuccessScreen SHALL aplicar los mismos estilos (`uppercase`, `font-bold`, `text-[#3B1F0E]`) al `h1` para mantener consistencia entre pantallas.
+
+---
+
+### Requirement 8: Subtítulo "MAYO 14" sin negritas
+
+**User Story:** Como organizador del evento, quiero que el subtítulo "MAYO 14" tenga un peso tipográfico más ligero, para que no compita visualmente con el título principal.
+
+#### Acceptance Criteria
+
+1. THE RegistrationForm SHALL cambiar el peso tipográfico del `h2` "MAYO 14" de `font-semibold` a `font-normal` o `font-light`.
+2. THE RegistrationForm SHALL mantener el resto de los estilos del `h2` (tamaño, color, espaciado) sin modificación.
+
+---
+
+### Requirement 9: Eliminación del párrafo descriptivo del header
+
+**User Story:** Como organizador del evento, quiero eliminar el párrafo "Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees." que aparece debajo de "MAYO 14" en el header, para simplificar la sección superior y reducir redundancia visual.
+
+#### Acceptance Criteria
+
+1. THE RegistrationForm SHALL eliminar el elemento `<p>` con el texto "Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees." ubicado en la sección de header, inmediatamente debajo del `h2` "MAYO 14".
+2. WHEN el RegistrationForm se renderiza, THE RegistrationForm SHALL mostrar únicamente el `h1` y el `h2` en la sección de header, sin párrafo descriptivo intermedio.
+
+---
+
+### Requirement 10: Color del texto de instrucciones del formulario
+
+**User Story:** Como organizador del evento, quiero que el texto de instrucciones "Ingresa tu primer nombre..." tenga un color café claro cálido, para que sea visualmente coherente con la paleta del recuadro y no distraiga del formulario.
+
+#### Acceptance Criteria
+
+1. THE RegistrationForm SHALL cambiar el color del párrafo de instrucciones ("Ingresa tu primer nombre, primer apellido y email...") de `text-[#F5ECD7]` a un tono café claro cálido equivalente al color de relleno del Window, usando `text-[#6B3A2A]` o un valor similar dentro de la Warm_Palette.
+2. THE RegistrationForm SHALL mantener el resto de los estilos del párrafo de instrucciones (tamaño, opacidad, alineación, padding) sin modificación.
+
+---
+
+### Requirement 11: Reducción de opacidad del fondo del componente Window
+
+**User Story:** Como organizador del evento, quiero reducir la opacidad del fondo del recuadro Window en un 20%, para que la imagen de fondo sea más visible a través del contenedor y la composición visual sea más ligera.
+
+#### Acceptance Criteria
+
+1. THE Window SHALL cambiar su `backgroundColor` de `rgba(59, 31, 14, 0.85)` a `rgba(59, 31, 14, 0.65)`.
+2. THE Window SHALL mantener el borde en terracota (`#C1714F`) y el resto de sus estilos sin modificación.
+3. THE App SHALL verificar que el texto dentro del Window siga siendo legible (contraste mínimo 4.5:1 WCAG AA) con la nueva opacidad de fondo.
+
+---
+
+### Requirement 12: Ajustes del footer inferior fuera del recuadro
+
+**User Story:** Como organizador del evento, quiero que el texto descriptivo del footer tenga el mismo color café claro del punto 10, que los textos fuera del recuadro no tengan punto final, y que "INVITRO" esté posicionado casi al borde inferior de la página, para lograr una composición visual más limpia y consistente.
+
+#### Acceptance Criteria
+
+1. THE RegistrationForm SHALL cambiar el color del párrafo "Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees." ubicado en el footer inferior (fuera del Window) de `text-gray-400` a `text-[#6B3A2A]` o el mismo tono café claro cálido definido en el Requirement 10.
+2. THE SuccessScreen SHALL aplicar el mismo cambio de color al párrafo equivalente en su footer inferior.
+3. THE RegistrationForm SHALL eliminar el punto final (`.`) de todos los textos visibles fuera del Window (header y footer), incluyendo el párrafo del footer inferior.
+4. THE SuccessScreen SHALL eliminar el punto final (`.`) de los textos visibles fuera del Window en su footer inferior.
+5. THE RegistrationForm SHALL posicionar el texto "INVITRO" con `position: fixed; bottom: 0` o un `padding-bottom` suficientemente grande para que quede casi al borde inferior de la ventana del navegador.
+6. THE SuccessScreen SHALL aplicar el mismo posicionamiento al texto "INVITRO" para mantener consistencia entre pantallas.
