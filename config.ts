@@ -10,6 +10,11 @@ export const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:273564995581:web:41406018ed2604a3169394"
 };
 
+// Mercado Pago Configuration
+export const mpConfig = {
+  publicKey: import.meta.env.VITE_MP_PUBLIC_KEY || 'APP_USR-d5189982-3f09-4684-8823-bd7270b3b337'
+};
+
 // EmailJS Configuration
 // Supports environment variables for production, falls back to hardcoded values for development
 export const emailJsConfig = {

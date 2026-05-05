@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { firebaseApp } from './services/firebaseService';
-import { checkIfEmailExists, saveRegistration } from './services/firebaseService';
+import { checkIfPaidEmailExists, savePendingRegistration, checkIfEmailExists } from './services/firebaseService';
 import { sendConfirmationEmail } from './services/emailService';
 import { UserData, AppState } from './types';
 import Window from './components/Window';
@@ -86,7 +86,7 @@ const RegistrationForm: React.FC<{
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide mb-2 text-[#3B1F0E] uppercase">ESTÁS MIRANDO EN RADIANES</h1>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal mb-2 text-black">MAYO 14</h2>
         
-        <p className="text-xs sm:text-sm md:text-base text-[#6B3A2A] max-w-md mx-auto leading-relaxed px-2">
+        <p className="text-xs sm:text-sm md:text-base text-[#6B3A2A] max-w-md mx-auto leading-relaxed px-2 font-bold">
           Ingresa tu primer nombre, primer apellido y email para poder enviarte el código QR necesario y hacer válida tu entrada el día del evento.
         </p>
       </div>
@@ -157,14 +157,14 @@ const RegistrationForm: React.FC<{
 
       {/* Footer Info */}
       <div className="text-center space-y-2 mb-8 md:mb-16">
-        <p className="text-sm text-[#6B3A2A] px-2 tracking-wide font-light text-center">
+        <p className="text-base text-[#3B1F0E] px-2 tracking-wide font-bold text-center">
           Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees
         </p>
       </div>
 
       {/* Bottom Brand */}
       <div className="fixed bottom-4 left-0 right-0">
-        <p className="font-normal text-xs tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
+        <p className="font-bold text-sm tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
           INVITRO
         </p>
       </div>
@@ -174,10 +174,11 @@ const RegistrationForm: React.FC<{
 
 const ConfirmationScreen: React.FC<{
   userData: UserData;
-  onConfirm: () => void;
+  onConfirmOnline: () => void;
+  onConfirmDoor: () => void;
   onBack: () => void;
   isSubmitting: boolean;
-}> = ({ userData, onConfirm, onBack, isSubmitting }) => (
+}> = ({ userData, onConfirmOnline, onConfirmDoor, onBack, isSubmitting }) => (
   <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-screen pt-4 pb-20 px-4">
     <Window>
       <div className="flex flex-col space-y-4 md:space-y-6 text-center">
@@ -192,14 +193,72 @@ const ConfirmationScreen: React.FC<{
             <span className="sm:col-span-2 font-medium text-sm sm:text-base break-all text-[#F5ECD7]">{userData.email}</span>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row justify-center gap-3 sm:space-x-4 pt-2">
-          <Button onClick={onBack} disabled={isSubmitting} className="w-full sm:w-auto border-gray-400 text-gray-600">Volver</Button>
-          <Button onClick={onConfirm} disabled={isSubmitting} className="w-full sm:w-auto">
-            {isSubmitting ? '...' : 'Confirmar'}
-          </Button>
+
+        <div className="space-y-4 pt-2">
+          <div className="flex flex-col gap-3">
+             <Button onClick={onConfirmOnline} disabled={isSubmitting} className="w-full">
+              {isSubmitting ? 'Procesando...' : 'Pagar en Línea (Mercado Pago)'}
+            </Button>
+            <button 
+              onClick={onConfirmDoor} 
+              disabled={isSubmitting}
+              className="w-full px-6 py-2 bg-transparent border-2 border-[#C1714F] text-[#F5ECD7] font-bold uppercase tracking-widest hover:bg-[#C1714F] hover:text-[#3B1F0E] transition-all disabled:opacity-50"
+            >
+              Registrar y Pagar en Puerta
+            </button>
+          </div>
+          
+          <button 
+            onClick={onBack} 
+            disabled={isSubmitting} 
+            className="text-xs uppercase tracking-widest text-[#F5ECD7] opacity-40 hover:opacity-100 transition-opacity"
+          >
+            ← Volver a editar
+          </button>
         </div>
       </div>
     </Window>
+  </div>
+);
+
+const SuccessPayAtDoorScreen: React.FC = () => (
+  <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-screen pt-6 md:pt-10 pb-20 px-4">
+    <div className="text-center mb-6 md:mb-8">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide mb-2 text-[#3B1F0E] uppercase">ESTÁS MIRANDO EN RADIANES</h1>
+    </div>
+
+    <Window className="mb-8 md:mb-12">
+      <div className="flex flex-col space-y-4 md:space-y-6 text-center">
+        <h3 className="text-2xl sm:text-3xl font-light mb-3 md:mb-4 text-[#F5ECD7]">¡Registro Recibido!</h3>
+        
+        <div className="text-left space-y-3 md:space-y-4 border-t border-b border-[#6B3A2A] py-4 md:py-6">
+          <p className="text-sm md:text-base text-[#F5ECD7] opacity-80 leading-relaxed px-2">
+            Tu registro ha sido guardado correctamente. <br/><br/>
+            <strong className="text-[#C1714F]">PAGO PENDIENTE:</strong> Deberás realizar tu pago directamente en la entrada del evento para recibir tu acceso.
+          </p>
+        </div>
+        
+        <p className="text-base md:text-lg lg:text-xl font-light text-[#F5ECD7]">
+          Te esperamos 8:00 PM
+        </p>
+      </div>
+    </Window>
+
+    <div className="text-center px-4 mb-12 animate-pulse">
+      <p className="text-sm md:text-base text-[#3B1F0E] font-bold tracking-wide">
+        CONFIRMACIÓN ENVIADA: Revisa tu bandeja de entrada. <br className="hidden sm:block" />
+        Hemos enviado los detalles de tu registro a tu correo electrónico.
+      </p>
+      <p className="text-[10px] md:text-xs text-[#3B1F0E] mt-2 uppercase tracking-widest font-bold opacity-90">
+        (No olvides checar tu carpeta de SPAM)
+      </p>
+    </div>
+
+    <div className="fixed bottom-4 left-0 right-0">
+      <p className="font-bold text-sm tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
+        INVITRO
+      </p>
+    </div>
   </div>
 );
 
@@ -217,7 +276,7 @@ const SuccessScreen: React.FC = () => (
         
         <div className="text-left space-y-3 md:space-y-4 border-t border-b border-[#6B3A2A] py-4 md:py-6">
           <p className="text-sm md:text-base text-[#F5ECD7] opacity-80 leading-relaxed px-2">
-            Debiste recibir un correo con la dirección del evento, además del código QR que deberás presentar ese día en la puerta.
+            Tu pago fue confirmado. Recibirás un correo con el código QR en los próximos minutos — puede tardar un poco en llegar.
           </p>
         </div>
         
@@ -229,22 +288,72 @@ const SuccessScreen: React.FC = () => (
 
     {/* Footer Info */}
     <div className="text-center space-y-2 mb-8 md:mb-16">
-      <p className="text-sm text-[#6B3A2A] px-2 tracking-wide font-light text-center">
+      <p className="text-base text-[#3B1F0E] px-2 tracking-wide font-bold text-center">
         Un taller sobre cómo la mirada por default te ha estado costando más de lo que crees
       </p>
     </div>
 
     {/* Bottom Brand */}
     <div className="fixed bottom-4 left-0 right-0">
-      <p className="font-normal text-xs tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
+      <p className="font-bold text-sm tracking-widest uppercase opacity-90 text-center text-[#C1714F]">
         INVITRO
       </p>
     </div>
   </div>
 );
 
+const PendingPaymentScreen: React.FC = () => (
+  <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-screen pt-6 md:pt-10 pb-20 px-4">
+    <div className="text-center mb-6 md:mb-8">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide mb-2 text-[#3B1F0E] uppercase">ESTÁS MIRANDO EN RADIANES</h1>
+    </div>
+    <Window className="mb-8 md:mb-12">
+      <div className="flex flex-col space-y-4 text-center">
+        <h3 className="text-xl sm:text-2xl font-light text-[#F5ECD7]">Redirigiendo a Mercado Pago...</h3>
+        <p className="text-sm text-[#F5ECD7] opacity-80">
+          Estás siendo redirigido para completar tu pago de forma segura.
+        </p>
+      </div>
+    </Window>
+    <div className="fixed bottom-4 left-0 right-0">
+      <p className="font-bold text-sm tracking-widest uppercase opacity-90 text-center text-[#C1714F]">INVITRO</p>
+    </div>
+  </div>
+);
+
+const PaymentFailedScreen: React.FC<{ onRetry: () => void }> = ({ onRetry }) => (
+  <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-screen pt-6 md:pt-10 pb-20 px-4">
+    <div className="text-center mb-6 md:mb-8">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide mb-2 text-[#3B1F0E] uppercase">ESTÁS MIRANDO EN RADIANES</h1>
+    </div>
+    <Window className="mb-8 md:mb-12">
+      <div className="flex flex-col space-y-4 md:space-y-6 text-center">
+        <h3 className="text-xl sm:text-2xl font-light text-[#F5ECD7]">Pago no completado</h3>
+        <div className="border-t border-b border-[#6B3A2A] py-4">
+          <p className="text-sm text-[#F5ECD7] opacity-80 leading-relaxed px-2">
+            Tu pago no fue procesado. Puedes intentarlo de nuevo cuando quieras.
+          </p>
+        </div>
+        <Button onClick={onRetry} className="w-full sm:w-auto mx-auto">Intentar de nuevo</Button>
+      </div>
+    </Window>
+    <div className="fixed bottom-4 left-0 right-0">
+      <p className="font-bold text-sm tracking-widest uppercase opacity-90 text-center text-[#C1714F]">INVITRO</p>
+    </div>
+  </div>
+);
+
 const App: React.FC = () => {
-  const [appState, setAppState] = useState<AppState>('form');
+  const getInitialAppState = (): AppState => {
+    const params = new URLSearchParams(window.location.search);
+    const payment = params.get('payment');
+    if (payment === 'success') return 'success';
+    if (payment === 'failure') return 'payment_failed';
+    if (payment === 'pending') return 'pending_payment';
+    return 'form';
+  };
+
+  const [appState, setAppState] = useState<AppState>(getInitialAppState);
   const [userData, setUserData] = useState<UserData>({ firstName: '', lastName: '', email: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -253,71 +362,103 @@ const App: React.FC = () => {
     setIsSubmitting(true);
     setError(null);
     try {
-      firebaseApp;
-
-      const emailExists = await checkIfEmailExists(userData.email);
-      if (emailExists) {
-        setError('Este email ya ha sido registrado.');
+      // Check if email exists before creating preference
+      const exists = await checkIfEmailExists(userData.email);
+      if (exists) {
+        setError('Este email ya inició un proceso de registro. Si ya pagaste, revisa tu correo.');
         setAppState('form');
-        setIsSubmitting(false);
         return;
       }
 
-      const fullName = `${userData.firstName} ${userData.lastName}`;
-      const registrationDate = new Date();
-      
-      const formattedDate = registrationDate.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-      const formattedTime = registrationDate.toLocaleTimeString('es-ES', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
+      // Call Vercel Serverless Function to create MP preference
+      const response = await fetch('/api/create-preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email,
+        }),
       });
 
-      // QR content — readable when scanned at the event door
-      const qrContent = encodeURIComponent(
-        `PRE-REGISTRO VALIDO | Nombre: ${userData.firstName} ${userData.lastName} | Email: ${userData.email} | Fecha: ${formattedDate} ${formattedTime} | Evento: ESTAS MIRANDO EN RADIANES - MAYO 14`
-      );
+      if (response.status === 409) {
+        setError('Este email ya está registrado. Revisa tu bandeja de entrada.');
+        setAppState('form');
+        return;
+      }
 
-      // Generate QR URL via free public API — no base64, no Firebase Storage needed
-      // Compatible with all email clients (Gmail, Outlook, Apple Mail)
-      const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${qrContent}&margin=10`;
+      if (!response.ok) {
+        throw new Error('Error al crear la preferencia de pago.');
+      }
 
-      const registrationData = {
+      const { init_point } = await response.json();
+
+      // Save pending registration in Firebase before redirecting
+      await savePendingRegistration({
         firstName: userData.firstName,
         lastName: userData.lastName,
-        name: fullName,
         email: userData.email,
-        qrCodeUrl: qrCodeUrl,
-        registeredAt: new Date().toISOString()
-      };
-
-      await saveRegistration(registrationData as any);
-      
-      await sendConfirmationEmail({
-        to_name: fullName,
-        to_email: userData.email,
-        qr_code_image_url: qrCodeUrl,
-        event_name: "ESTÁS MIRANDO EN RADIANES",
-        event_date: "14 de Mayo",
-        event_location: "Por confirmar",
-        event_time: "8:00 PM"
+        paymentStatus: 'pending_payment',
+        registeredAt: new Date().toISOString(),
       });
 
-      setAppState('success');
+      // Redirect to Mercado Pago
+      setAppState('pending_payment');
+      window.location.href = init_point;
+
     } catch (err: any) {
       console.error("Registration failed:", err);
-      let errorMessage = 'Ocurrió un error. Inténtalo de nuevo.';
-      if (err.message?.includes('email') || err.message?.includes('confirmation')) {
-        errorMessage = 'No se pudo enviar el email de confirmación. Inténtalo de nuevo.';
-      } else if (err.message?.includes('save') || err.message?.includes('registration')) {
-        errorMessage = 'No se pudo guardar el registro. Inténtalo de nuevo.';
+      setError('Ocurrió un error. Inténtalo de nuevo.');
+      setAppState('confirmation');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [userData]);
+
+  const handleRegisterAtDoor = useCallback(async () => {
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      const exists = await checkIfEmailExists(userData.email);
+      if (exists) {
+        setError('Este email ya está registrado.');
+        setAppState('form');
+        return;
       }
-      setError(errorMessage);
-      setAppState('form');
+
+      const qrContent = encodeURIComponent(
+        `PAGO EN PUERTA | Nombre: ${userData.firstName} ${userData.lastName} | Email: ${userData.email} | Evento: RADIANES - MAYO 14`
+      );
+      const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${qrContent}&margin=10`;
+
+      await savePendingRegistration({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        paymentStatus: 'pay_at_door',
+        registeredAt: new Date().toISOString(),
+        qrCodeUrl: qrCodeUrl
+      });
+
+      // Send email notification for door payment
+      try {
+        await sendConfirmationEmail({
+          to_name: `${userData.firstName} ${userData.lastName}`,
+          to_email: userData.email,
+          qr_code_image_url: qrCodeUrl,
+          event_name: "ESTÁS MIRANDO EN RADIANES",
+          event_date: "14 de Mayo",
+          event_location: "Por confirmar",
+          event_time: "8:00 PM"
+        });
+      } catch (e) {
+        console.warn("Email could not be sent, but registration is saved.");
+      }
+
+      setAppState('success_door');
+    } catch (err: any) {
+      console.error("Door registration failed:", err);
+      setError('Error al registrar. Inténtalo de nuevo.');
     } finally {
       setIsSubmitting(false);
     }
@@ -332,9 +473,21 @@ const App: React.FC = () => {
       case 'form':
         return <RegistrationForm userData={userData} setUserData={setUserData} setAppState={setAppState} error={error} setError={setError} />;
       case 'confirmation':
-        return <ConfirmationScreen userData={userData} onConfirm={handleConfirmRegistration} onBack={handleGoBack} isSubmitting={isSubmitting} />;
+        return <ConfirmationScreen 
+          userData={userData} 
+          onConfirmOnline={handleConfirmRegistration} 
+          onConfirmDoor={handleRegisterAtDoor}
+          onBack={handleGoBack} 
+          isSubmitting={isSubmitting} 
+        />;
+      case 'pending_payment':
+        return <PendingPaymentScreen />;
       case 'success':
         return <SuccessScreen />;
+      case 'success_door':
+        return <SuccessPayAtDoorScreen />;
+      case 'payment_failed':
+        return <PaymentFailedScreen onRetry={() => setAppState('form')} />;
       default:
         return null;
     }
