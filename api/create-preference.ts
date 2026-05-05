@@ -53,9 +53,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN! });
     const preference = new Preference(client);
 
-    const appUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : (process.env.APP_URL || 'https://invitro-radianes.vercel.app');
+    const appUrl = 'https://invitro-radianes.vercel.app';
 
     const result = await preference.create({
       body: {
