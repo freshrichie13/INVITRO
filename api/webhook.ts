@@ -44,7 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).end();
     }
 
-    const payerEmail = paymentData.payer?.email;
+    const payerEmail = paymentData.external_reference || paymentData.payer?.email;
     if (!payerEmail) {
       console.warn('Webhook: no payer email in payment data');
       return res.status(200).end();
@@ -92,22 +92,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       paymentStatus: 'paid'
     });
 
-    // Send confirmation email via EmailJS
+    // Send confirmation email via EmailJS REST API
     try {
-      emailjs.init(emailJsConfig.publicKey);
-      await emailjs.send(
-        emailJsConfig.serviceID,
-        emailJsConfig.templateID,
-        {
-          to_name: `${registrationData.firstName} ${registrationData.lastName}`,
-          to_email: payerEmail,
-          qr_code_image_url: qrCodeUrl,
-          event_name: "ESTÁS MIRANDO EN RADIANES",
-          event_date: "14 de Mayo",
-          event_location: "Por confirmar",
-          event_time: "8:00 PM"
-        }
-      );
+      const emailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id: emailJsConfig.serviceID,
+          template_id: emailJsConfig.templateID,
+          user_id: emailJsConfig.publicKey,
+          template_params: {
+            to_name: `${registrationData.firstName} ${registrationData.lastName}`,
+            to_email: payerEmail,
+            qr_code_image_url: qrCodeUrl,
+            event_name: "ESTÁS MIRANDO EN RADIANES",
+            event_date: "14 de Mayo",
+            event_location: "Por confirmar",
+            event_time: "8:00 PM"
+          }
+        })
+      });
+      if (!emailResponse.ok) {
+        console.error('EmailJS returned error:', await emailResponse.text());
+      } else {
+        console.log('Confirmation email sent successfully.');
+      }
     } catch (emailError) {
       // Log but don't fail — registration is already confirmed in Firebase
       console.error('Webhook: failed to send confirmation email:', emailError);

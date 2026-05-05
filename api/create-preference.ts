@@ -75,6 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           pending: `${appUrl}/?payment=pending`,
         },
         auto_return: 'approved',
+        external_reference: email,
         ...(appUrl.includes('localhost') ? {} : { notification_url: `${appUrl}/api/webhook` }),
       }
     });
