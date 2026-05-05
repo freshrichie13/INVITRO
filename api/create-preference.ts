@@ -71,7 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           surname: lastName,
           email: email,
         },
-        back_url: {
+        back_urls: {
           success: `${appUrl}/?payment=success`,
           failure: `${appUrl}/?payment=failure`,
           pending: `${appUrl}/?payment=pending`,
