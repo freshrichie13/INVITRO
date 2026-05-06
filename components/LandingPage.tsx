@@ -5,7 +5,7 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
   const availableSpots = TOTAL_SPOTS; // Será dinámico en Grupo 4
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 py-10 pb-24 overflow-y-auto">
+    <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-10 pb-20">
 
       {/* ── HEADER ── */}
       <div className="text-center mb-10">
@@ -23,7 +23,7 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
         <button
           id="cta-top"
           onClick={onStart}
-          className="px-8 py-4 bg-[#3B1F0E] text-[#F5ECD7] font-bold uppercase tracking-widest text-base hover:bg-[#C1714F] transition-colors duration-300 shadow-lg"
+          className="w-full sm:w-auto px-8 py-4 bg-[#3B1F0E] text-[#F5ECD7] font-bold uppercase tracking-widest text-sm sm:text-base hover:bg-[#C1714F] transition-colors duration-300 shadow-lg"
         >
           Apartar mi lugar [$550 MXN]
         </button>
@@ -87,7 +87,7 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
       </div>
 
       {/* ── BLOQUE DE DATOS DEL EVENTO ── */}
-      <div className="border border-[#C1714F] border-opacity-40 p-6 mb-10 space-y-3 bg-[#3B1F0E] bg-opacity-5">
+      <div className="border border-[#C1714F] border-opacity-40 p-4 sm:p-6 mb-10 space-y-3 bg-[#3B1F0E] bg-opacity-5">
         {[
           { icon: '📅', label: 'Cuándo', text: 'Jueves 14 de mayo · 6:00 – 8:30 pm' },
           { icon: '📍', label: 'Dónde', text: 'SAMÖ Cafeart — C. Cortadores de Aurora 120, Cd Aurora, León, Gto.' },
@@ -106,13 +106,11 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
 
       {/* ── MAPA GOOGLE MAPS ── */}
       <div className="mb-10">
-        <div className="w-full overflow-hidden border border-[#C1714F] border-opacity-30" style={{ height: '260px' }}>
+        <div className="w-full overflow-hidden border border-[#C1714F] border-opacity-30 relative" style={{ paddingBottom: '56.25%', height: 0 }}>
           <iframe
             title="SAMÖ Cafeart ubicación"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.6!2d-101.6597!3d21.1326!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bbf35b01e0e07%3A0x6dce3d2b3c61c9e7!2sSAM%C3%96%20Cafeart!5e0!3m2!1ses!2smx!4v1"
-            width="100%"
-            height="260"
-            style={{ border: 0 }}
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -133,7 +131,7 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
         <button
           id="cta-bottom"
           onClick={onStart}
-          className="px-8 py-4 bg-[#3B1F0E] text-[#F5ECD7] font-bold uppercase tracking-widest text-base hover:bg-[#C1714F] transition-colors duration-300 shadow-lg"
+          className="w-full sm:w-auto px-8 py-4 bg-[#3B1F0E] text-[#F5ECD7] font-bold uppercase tracking-widest text-sm sm:text-base hover:bg-[#C1714F] transition-colors duration-300 shadow-lg"
         >
           Apartar mi lugar [$550 MXN]
         </button>
