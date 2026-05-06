@@ -1,8 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { getOccupiedSpotsListener, addToWaitlist } from '../services/firebaseService';
 
 const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
   const TOTAL_SPOTS = 30;
-  const availableSpots = TOTAL_SPOTS; // Será dinámico en Grupo 4
+  const [occupiedSpots, setOccupiedSpots] = useState(0);
+  const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [isSubmittingWaitlist, setIsSubmittingWaitlist] = useState(false);
+  const [waitlistSuccess, setWaitlistSuccess] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = getOccupiedSpotsListener((count) => {
+      setOccupiedSpots(count);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const availableSpots = Math.max(0, TOTAL_SPOTS - occupiedSpots);
+
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!waitlistEmail) return;
+    setIsSubmittingWaitlist(true);
+    try {
+      await addToWaitlist(waitlistEmail);
+      setWaitlistSuccess(true);
+      setWaitlistEmail('');
+    } catch (err) {
+      alert("Error al unirse a la lista de espera. Intenta de nuevo.");
+    } finally {
+      setIsSubmittingWaitlist(false);
+    }
+  };
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-10 pb-20">
@@ -18,21 +46,51 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
         </p>
       </div>
 
-      {/* ── CTA BUTTON (top) ── */}
+      {/* ── CTA SECTION (top) ── */}
       <div className="flex flex-col items-center mb-12">
-        <button
-          id="cta-top"
-          onClick={onStart}
-          className="w-full sm:w-auto px-8 py-4 bg-[#3B1F0E] text-[#F5ECD7] font-bold uppercase tracking-widest text-sm sm:text-base hover:bg-[#C1714F] transition-colors duration-300 shadow-lg"
-        >
-          Apartar mi lugar [$550 MXN]
-        </button>
-        {/* Contador de lugares */}
-        <p className="mt-3 text-xs text-[#6B3A2A] tracking-wide">
-          {availableSpots > 0
-            ? `${availableSpots} de ${TOTAL_SPOTS} lugares disponibles`
-            : 'Lugares agotados — lista de espera'}
-        </p>
+        {availableSpots > 0 ? (
+          <>
+            <button
+              id="cta-top"
+              onClick={onStart}
+              className="w-full sm:w-auto px-8 py-4 bg-[#3B1F0E] text-[#F5ECD7] font-bold uppercase tracking-widest text-sm sm:text-base hover:bg-[#C1714F] transition-colors duration-300 shadow-lg"
+            >
+              Apartar mi lugar [$550 MXN]
+            </button>
+            <p className="mt-3 text-xs text-[#6B3A2A] tracking-wide">
+              {availableSpots} de {TOTAL_SPOTS} lugares disponibles
+            </p>
+          </>
+        ) : (
+          <div className="w-full bg-[#3B1F0E] bg-opacity-5 border border-[#C1714F] p-6 text-center">
+            <h4 className="text-[#3B1F0E] font-bold uppercase tracking-widest text-sm mb-4">
+              Agotado — lista de espera
+            </h4>
+            {waitlistSuccess ? (
+              <p className="text-sm text-[#6B3A2A] font-bold animate-pulse">
+                ¡Te has unido a la lista! Te avisaremos si se libera un lugar.
+              </p>
+            ) : (
+              <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-2 w-full">
+                <input
+                  type="email"
+                  required
+                  placeholder="Tu correo..."
+                  value={waitlistEmail}
+                  onChange={(e) => setWaitlistEmail(e.target.value)}
+                  className="flex-1 px-4 py-3 bg-transparent border border-[#6B3A2A] text-[#3B1F0E] text-sm focus:outline-none focus:border-[#C1714F]"
+                />
+                <button
+                  type="submit"
+                  disabled={isSubmittingWaitlist}
+                  className="px-6 py-3 bg-[#3B1F0E] text-[#F5ECD7] text-xs font-bold uppercase tracking-widest hover:bg-[#C1714F] transition-colors disabled:opacity-50"
+                >
+                  {isSubmittingWaitlist ? 'Enviando...' : 'Unirme'}
+                </button>
+              </form>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── SECCIÓN: ¿POR QUÉ? ── */}
@@ -126,20 +184,51 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
         </p>
       </div>
 
-      {/* ── CTA BOTTOM ── */}
+      {/* ── CTA SECTION (bottom) ── */}
       <div className="flex flex-col items-center mb-6">
-        <button
-          id="cta-bottom"
-          onClick={onStart}
-          className="w-full sm:w-auto px-8 py-4 bg-[#3B1F0E] text-[#F5ECD7] font-bold uppercase tracking-widest text-sm sm:text-base hover:bg-[#C1714F] transition-colors duration-300 shadow-lg"
-        >
-          Apartar mi lugar [$550 MXN]
-        </button>
-        <p className="mt-3 text-xs text-[#6B3A2A] tracking-wide">
-          {availableSpots > 0
-            ? `${availableSpots} de ${TOTAL_SPOTS} lugares disponibles`
-            : 'Lugares agotados — lista de espera'}
-        </p>
+        {availableSpots > 0 ? (
+          <>
+            <button
+              id="cta-bottom"
+              onClick={onStart}
+              className="w-full sm:w-auto px-8 py-4 bg-[#3B1F0E] text-[#F5ECD7] font-bold uppercase tracking-widest text-sm sm:text-base hover:bg-[#C1714F] transition-colors duration-300 shadow-lg"
+            >
+              Apartar mi lugar [$550 MXN]
+            </button>
+            <p className="mt-3 text-xs text-[#6B3A2A] tracking-wide">
+              {availableSpots} de {TOTAL_SPOTS} lugares disponibles
+            </p>
+          </>
+        ) : (
+          <div className="w-full bg-[#3B1F0E] bg-opacity-5 border border-[#C1714F] p-6 text-center">
+            <h4 className="text-[#3B1F0E] font-bold uppercase tracking-widest text-sm mb-4">
+              Agotado — lista de espera
+            </h4>
+            {waitlistSuccess ? (
+              <p className="text-sm text-[#6B3A2A] font-bold animate-pulse">
+                ¡Te has unido a la lista! Te avisaremos si se libera un lugar.
+              </p>
+            ) : (
+              <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-2 w-full">
+                <input
+                  type="email"
+                  required
+                  placeholder="Tu correo..."
+                  value={waitlistEmail}
+                  onChange={(e) => setWaitlistEmail(e.target.value)}
+                  className="flex-1 px-4 py-3 bg-transparent border border-[#6B3A2A] text-[#3B1F0E] text-sm focus:outline-none focus:border-[#C1714F]"
+                />
+                <button
+                  type="submit"
+                  disabled={isSubmittingWaitlist}
+                  className="px-6 py-3 bg-[#3B1F0E] text-[#F5ECD7] text-xs font-bold uppercase tracking-widest hover:bg-[#C1714F] transition-colors disabled:opacity-50"
+                >
+                  {isSubmittingWaitlist ? 'Enviando...' : 'Unirme'}
+                </button>
+              </form>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── BRAND ── */}

@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import MercadoPago, { MercadoPagoConfig, Preference } from 'mercadopago';
 import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 
 // Initialize Firebase (conditional to avoid re-initialization in warm invocations)
 const firebaseConfig = {
@@ -47,6 +47,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const alreadyPaid = await checkIfPaidEmailExists(email);
     if (alreadyPaid) {
       return res.status(409).json({ error: 'Este email ya está registrado y tiene un pago confirmado.' });
+    }
+
+    // Check for availability
+    const statsRef = doc(db, 'metadata', 'event_stats');
+    const statsSnap = await getDoc(statsRef);
+    if (statsSnap.exists() && statsSnap.data().occupied_spots >= 30) {
+      return res.status(403).json({ error: 'Lo sentimos, ya no hay lugares disponibles.' });
     }
 
     // Initialize Mercado Pago client

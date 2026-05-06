@@ -1,6 +1,20 @@
 
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, Timestamp } from 'firebase/firestore';
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  query, 
+  where, 
+  getDocs, 
+  updateDoc, 
+  doc, 
+  getDoc, 
+  onSnapshot, 
+  setDoc, 
+  increment, 
+  Timestamp 
+} from 'firebase/firestore';
 import { firebaseConfig } from '../config';
 import { RegistrationData } from '../types';
 
@@ -93,3 +107,48 @@ export const saveRegistration = async (data: Omit<RegistrationData, 'registeredA
     throw new Error('Could not save registration data.');
   }
 };
+
+/**
+ * Subscribes to real-time updates for the occupied spots count.
+ */
+export const getOccupiedSpotsListener = (callback: (count: number) => void) => {
+  const statsRef = doc(db, 'metadata', 'event_stats');
+  
+  return onSnapshot(statsRef, (docSnap) => {
+    if (docSnap.exists()) {
+      callback(docSnap.data().occupied_spots || 0);
+    } else {
+      // Initialize if doesn't exist
+      setDoc(statsRef, { occupied_spots: 0 });
+      callback(0);
+    }
+  });
+};
+
+/**
+ * Adds an email to the waitlist collection.
+ */
+export const addToWaitlist = async (email: string): Promise<void> => {
+  try {
+    const waitlistCollection = collection(db, 'waitlist');
+    await addDoc(waitlistCollection, {
+      email: email.toLowerCase().trim(),
+      registeredAt: Timestamp.now()
+    });
+  } catch (error) {
+    console.error("Error adding to waitlist: ", error);
+    throw new Error('Could not join waitlist.');
+  }
+};
+
+/**
+ * Atomic increment of the occupied spots count.
+ * To be used from serverless functions (webhooks).
+ */
+export const incrementOccupiedSpots = async (): Promise<void> => {
+  const statsRef = doc(db, 'metadata', 'event_stats');
+  await updateDoc(statsRef, {
+    occupied_spots: increment(1)
+  });
+};
+

@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import MercadoPago, { MercadoPagoConfig, Payment } from 'mercadopago';
 import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, collection, query, where, getDocs, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, updateDoc, increment, doc, setDoc } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
 
 // Initialize Firebase (conditional to avoid re-initialization in warm invocations)
@@ -103,6 +103,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       paymentStatus: 'paid',
       assignedAlterEgo: assignedAlterEgo // Store it so we know what was sent
     });
+
+    // Increment occupied spots counter atomically
+    const statsRef = doc(db, 'metadata', 'event_stats');
+    try {
+      await updateDoc(statsRef, {
+        occupied_spots: increment(1)
+      });
+    } catch (e) {
+      // If doc doesn't exist, create it
+      await setDoc(statsRef, { occupied_spots: 1 }, { merge: true });
+    }
 
     // Send confirmation email via EmailJS REST API
     try {
