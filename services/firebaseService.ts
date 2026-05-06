@@ -47,6 +47,7 @@ export const savePendingRegistration = async (
       email: data.email,
       qrCodeUrl: data.qrCodeUrl || '',
       paymentStatus: data.paymentStatus,
+      howDidYouHear: data.howDidYouHear || '',
       registeredAt: Timestamp.fromDate(new Date(data.registeredAt))
     });
   } catch (error) {

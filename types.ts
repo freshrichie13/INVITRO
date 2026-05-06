@@ -3,12 +3,13 @@ export interface UserData {
   firstName: string;
   lastName: string;
   email: string;
+  howDidYouHear?: string;
 }
 
 export interface RegistrationData extends UserData {
     qrCodeUrl?: string;
-    paymentStatus: 'pending_payment' | 'paid' | 'pay_at_door';
+    paymentStatus: 'pending_payment' | 'paid';
     registeredAt: string;
 }
 
-export type AppState = 'form' | 'confirmation' | 'pending_payment' | 'success' | 'success_door' | 'payment_failed';
+export type AppState = 'landing' | 'form' | 'confirmation' | 'pending_payment' | 'success' | 'payment_failed';
