@@ -102,7 +102,7 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
           ¿Alguna vez arruinaste un examen de matemáticas porque tu calculadora estaba en Radianes y tú ni cuenta? Bueno. Existe la posibilidad de que algo parecido te esté pasando con la mirada.
         </p>
         <p className="text-sm text-[#3B1F0E] leading-relaxed mb-3">
-          Las doctrinas, la escuela, el algoritmo <strong>TODO NOS ENSEÑA A VER LA REALIDAD EN UN MODO POR DEFAULT</strong> y hace que nos perdemos de cosas valiosas.
+          Las doctrinas, la escuela, el algoritmo <strong>TODO NOS ENSEÑA A VER LA REALIDAD EN UN MODO POR DEFAULT</strong> y hace que nos perdamos de cosas valiosas.
         </p>
         <p className="text-sm text-[#3B1F0E] leading-relaxed mb-3">
           Ideas, conexiones, oportunidades que están justo enfrente pero que no vemos porque nadie nos dijo que había otro modo de ver.
@@ -140,7 +140,7 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
           Para cualquier persona curiosa que tenga ganas de desafiar sus ideas. No necesitas saber de arte. No necesitas ser artista ni creativo de profesión. Solo necesitas estar dispuestx a ver las cosas diferente [aunque sea tantito].
         </p>
         <p className="text-sm text-[#3B1F0E] leading-relaxed">
-          Si alguna vez estuviste en un museo pensando "esto lo hubiera hecho yo" &lbrace;probablemente tenías razón&rbrace;. Ven a comprobarlo.
+          Si alguna vez estuviste en un museo pensando "esto lo hubiera hecho yo" {"{probablemente tenías razón}"}. Ven a comprobarlo.
         </p>
       </div>
 
@@ -180,7 +180,7 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
       {/* ── FRASE DUCHAMP ── */}
       <div className="mb-10 text-center px-4">
         <p className="text-sm text-[#3B1F0E] leading-relaxed italic">
-          Duchamp puso un mingitorio en un museo y cambió el arte para siempre. Tú puedes seguir mirando en el modo que te instalaron &lbrace;o puedes venir el 14 de mayo a ver qué pasa cuando cambias la configuración&rbrace;.
+          Duchamp puso un mingitorio en un museo y cambió el arte para siempre. Tú puedes seguir mirando en el modo que te instalaron {"{o puedes venir el 14 de mayo a ver qué pasa cuando cambias la configuración}"}.
         </p>
       </div>
 
