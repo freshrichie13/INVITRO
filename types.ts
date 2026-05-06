@@ -9,6 +9,7 @@ export interface UserData {
 export interface RegistrationData extends UserData {
     qrCodeUrl?: string;
     paymentStatus: 'pending_payment' | 'paid';
+    assignedAlterEgo?: string;
     registeredAt: string;
 }
 

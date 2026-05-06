@@ -86,10 +86,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     );
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${qrContent}&margin=10`;
 
+    // Generate Alter Ego Consign (1 of 4)
+    const alterEgoVersions = [
+      "Tu animal favorito de la infancia + una marca de condimento. (Ej: Tigre Heinz, Delfín Maggi, Cocodrilo Tajín)",
+      "Tu personaje de caricatura favorito... pero pronunciado al revés. (Ej: Tobmab, Ymmit, Ocinotsed)",
+      "Un objeto completamente inservible + un número al azar. (Ej: Pisapapeles 3000, Destapacaños 77, Sacagrapas 404)",
+      "Si fueras magx de día y stripper de noche... ¿cuál sería tu nombre artístico?"
+    ];
+    const assignedAlterEgo = alterEgoVersions[Math.floor(Math.random() * alterEgoVersions.length)];
+
+    const objectConsign = "TRAE UN OBJETO RANDOM. Basura reciclable, un electrónico descompuesto, un juguete olvidado, un adorno que nadie sabe de dónde salió, algo del cajón del caos, de debajo del sillón o de la cajuela del carro. Mientras más random, mejor. En serio, no lo olvides {va a hacer falta}. Ah, y una vez que lo tengas: guárdalo. No lo muestres ni lo menciones hasta que se te indique ese día. {No te decimos para qué todavía}. Confía.";
+
     // Update Firebase — confirm registration
     await updateDoc(pendingDoc.ref, {
       qrCodeUrl,
-      paymentStatus: 'paid'
+      paymentStatus: 'paid',
+      assignedAlterEgo: assignedAlterEgo // Store it so we know what was sent
     });
 
     // Send confirmation email via EmailJS REST API
@@ -106,9 +118,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             to_email: payerEmail,
             qr_code_image_url: qrCodeUrl,
             event_name: "ESTÁS MIRANDO EN RADIANES",
-            event_date: "14 de Mayo",
-            event_location: "Por confirmar",
-            event_time: "8:00 PM"
+            event_date: "Jueves 14 de mayo",
+            event_location: "SAMÖ Cafeart · C. Cortadores de Aurora 120, Cd Aurora, León, Gto.",
+            event_time: "6:00 – 8:30 pm",
+            monto_pago: "$550 MXN",
+            consigna_objeto: objectConsign,
+            consigna_alter_ego: assignedAlterEgo
           }
         })
       });
