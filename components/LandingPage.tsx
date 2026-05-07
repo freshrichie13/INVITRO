@@ -94,7 +94,7 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
       </div>
 
       {/* ── SECCIÓN: ¿POR QUÉ? ── */}
-      <div className="mb-10">
+      <div className="mb-10 text-center">
         <h3 className="text-lg font-bold text-[#3B1F0E] uppercase tracking-widest mb-3">
           ¿Por qué invertir mi tiempo en esto?
         </h3>
@@ -113,7 +113,7 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
       </div>
 
       {/* ── SECCIÓN: ¿QUÉ HARÁS? ── */}
-      <div className="mb-10">
+      <div className="mb-10 text-center">
         <h3 className="text-lg font-bold text-[#3B1F0E] uppercase tracking-widest mb-3">
           ¿Qué harás aquí?
         </h3>
@@ -123,16 +123,16 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
             'Ver por qué el arte conceptual es básicamente filosofía con descaro [y qué tiene que ver eso contigo].',
             'Hacer algo con tus propias manos que no esperabas hacer. (Más info en el correo de confirmación)',
           ].map((item, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm text-[#3B1F0E] leading-relaxed">
-              <span className="mt-1 w-2 h-2 rounded-full bg-[#C1714F] flex-shrink-0" />
-              {item}
+            <li key={i} className="flex flex-col items-center gap-1 text-sm text-[#3B1F0E] leading-relaxed">
+              <span className="w-2 h-2 rounded-full bg-[#C1714F] flex-shrink-0" />
+              <span>{item}</span>
             </li>
           ))}
         </ul>
       </div>
 
       {/* ── SECCIÓN: ¿PARA QUIÉN? ── */}
-      <div className="mb-10">
+      <div className="mb-10 text-center">
         <h3 className="text-lg font-bold text-[#3B1F0E] uppercase tracking-widest mb-3">
           ¿Para quién es esto?
         </h3>
@@ -145,14 +145,14 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
       </div>
 
       {/* ── BLOQUE DE DATOS DEL EVENTO ── */}
-      <div className="border border-[#C1714F] border-opacity-40 p-4 sm:p-6 mb-10 space-y-3 bg-[#3B1F0E] bg-opacity-5">
+      <div className="border border-[#C1714F] border-opacity-40 p-4 sm:p-6 mb-10 space-y-6 bg-[#3B1F0E] bg-opacity-5 text-center">
         {[
           { icon: '📅', label: 'Cuándo', text: 'Jueves 14 de mayo · 6:00 – 8:30 pm' },
           { icon: '📍', label: 'Dónde', text: 'SAMÖ Cafeart — C. Cortadores de Aurora 120, Cd Aurora, León, Gto.' },
           { icon: '🎟', label: 'Costo', text: '$550 MXN · Pago en línea vía MercadoPago · Es seguro y tu lugar queda confirmado solo al completar el pago' },
           { icon: '👥', label: 'Lugares', text: `Máximo 30 · Ya sabes cómo es esto.` },
         ].map(({ icon, label, text }) => (
-          <div key={label} className="flex items-start gap-3">
+          <div key={label} className="flex flex-col items-center gap-1">
             <span className="text-lg flex-shrink-0">{icon}</span>
             <div>
               <span className="text-xs font-bold uppercase tracking-widest text-[#6B3A2A]">{label}  </span>
@@ -167,7 +167,7 @@ const LandingPage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
         <div className="w-full overflow-hidden border border-[#C1714F] border-opacity-30 relative" style={{ paddingBottom: '56.25%', height: 0 }}>
           <iframe
             title="SAMÖ Cafeart ubicación"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.6!2d-101.6597!3d21.1326!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bbf35b01e0e07%3A0x6dce3d2b3c61c9e7!2sSAM%C3%96%20Cafeart!5e0!3m2!1ses!2smx!4v1"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3720.544!2d-101.6651372!3d21.1705343!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bbf001260f5ad%3A0xc9c3bdd58ba17918!2sSAM%C3%96%20Caf%C3%A9%20%26%20Art!5e0!3m2!1ses-419!2smx!4v1"
             style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
             allowFullScreen
             loading="lazy"
