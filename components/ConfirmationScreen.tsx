@@ -47,9 +47,9 @@ const ConfirmationScreen: React.FC<{
 
     {/* Info debajo del recuadro */}
     <div className="text-center mt-6 space-y-1 px-4">
-      <p className="text-sm text-[#8B5E3C]">Mayo 14 · 6:00 pm a 8:30 pm</p>
-      <p className="text-xs text-[#8B5E3C] leading-relaxed">
-        Lugar: SAMÖ Cafeart — C. Cortadores de Aurora 120, Cd Aurora, 37110 León de los Aldama, Gto.
+      <p className="text-[11px] text-[#8B5E3C] opacity-80 uppercase tracking-widest">Horario: 6:00 pm a 8:30 pm</p>
+      <p className="text-[10px] text-[#8B5E3C] opacity-70 leading-relaxed max-w-xs mx-auto">
+        Lugar: SAMÖ Cafeart — C. Cortadores de Aurora 120, Cd Aurora, 37110 León de los Aldama, Gto
       </p>
       <p className="text-xs font-bold text-[#8B5E3C] mt-2">
         Al completar tu pago recibirás un correo con INFORMACION IMPORTANTE para tu participación en el taller

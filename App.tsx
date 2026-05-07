@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { checkIfEmailExists, savePendingRegistration } from './services/firebaseService';
 import { UserData, AppState } from './types';
 import LandingPage from './components/LandingPage';
@@ -21,6 +21,33 @@ const App: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Manejar navegación con botones del navegador (atrás/adelante)
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.appState) {
+        setAppState(event.state.appState);
+      } else {
+        // Volver al estado inicial si no hay estado en el historial
+        setAppState(getInitialAppState());
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    // Inicializar el estado en el historial para la página actual
+    if (!window.history.state) {
+      window.history.replaceState({ appState: getInitialAppState() }, '');
+    }
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Función para cambiar de estado y actualizar el historial
+  const navigateTo = useCallback((newState: AppState) => {
+    setAppState(newState);
+    window.history.pushState({ appState: newState }, '');
+  }, []);
+
   const handleConfirmRegistration = useCallback(async () => {
     setIsSubmitting(true);
     setError(null);
@@ -28,7 +55,7 @@ const App: React.FC = () => {
       const exists = await checkIfEmailExists(userData.email);
       if (exists) {
         setError('Este email ya inició un proceso de registro. Si ya pagaste, revisa tu correo.');
-        setAppState('form');
+        navigateTo('form');
         return;
       }
 
@@ -44,7 +71,7 @@ const App: React.FC = () => {
 
       if (response.status === 409) {
         setError('Este email ya está registrado. Revisa tu bandeja de entrada.');
-        setAppState('form');
+        navigateTo('form');
         return;
       }
 
@@ -61,32 +88,33 @@ const App: React.FC = () => {
         registeredAt: new Date().toISOString(),
       });
 
+      // Para procesos externos como Mercado Pago, no usamos navigateTo interno
       setAppState('pending_payment');
       window.location.href = init_point;
 
     } catch (err: any) {
       console.error('Registration failed:', err);
       setError('Ocurrió un error. Inténtalo de nuevo.');
-      setAppState('confirmation');
+      navigateTo('confirmation');
     } finally {
       setIsSubmitting(false);
     }
-  }, [userData]);
+  }, [userData, navigateTo]);
 
   const renderContent = () => {
     switch (appState) {
       case 'landing':
-        return <LandingPage onStart={() => setAppState('form')} />;
+        return <LandingPage onStart={() => navigateTo('form')} />;
       case 'form':
-        return <RegistrationForm userData={userData} setUserData={setUserData} setAppState={setAppState} error={error} setError={setError} />;
+        return <RegistrationForm userData={userData} setUserData={setUserData} setAppState={navigateTo} error={error} setError={setError} />;
       case 'confirmation':
-        return <ConfirmationScreen userData={userData} onConfirmOnline={handleConfirmRegistration} onBack={() => setAppState('form')} isSubmitting={isSubmitting} />;
+        return <ConfirmationScreen userData={userData} onConfirmOnline={handleConfirmRegistration} onBack={() => navigateTo('form')} isSubmitting={isSubmitting} />;
       case 'pending_payment':
         return <PendingPaymentScreen />;
       case 'success':
         return <SuccessScreen />;
       case 'payment_failed':
-        return <PaymentFailedScreen onRetry={() => setAppState('landing')} />;
+        return <PaymentFailedScreen onRetry={() => navigateTo('landing')} />;
       default:
         return null;
     }
